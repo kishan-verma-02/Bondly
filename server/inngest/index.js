@@ -1,5 +1,6 @@
 import { Inngest } from "inngest";
 import User from "../modals/User.js";
+import connectDB from '../configs/db.js'
 
 // Create a client to send and receive events
 export const inngest = new Inngest({ id: "bondly-app" });
@@ -8,7 +9,9 @@ export const inngest = new Inngest({ id: "bondly-app" });
 const syncUserCreation = inngest.createFunction(
     {id: 'sync-user-from-clerk'},
     {event: 'clerk/user.created'},
+    
     async ({event}) => {
+        await connectDB();
         const {id, first_name, last_name, email_addresses, image_url} = event.data
         let username = email_addresses[0].email.address.split('@')[0]
 
